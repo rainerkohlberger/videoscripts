@@ -42,8 +42,14 @@ LABELS = [
     "street", "car", "bedroom", "kitchen", "bathroom", "closet", "garage", "cell", "symbol", "noise", "surveillance", "trap"
 ]
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model, preprocess = clip.load("ViT-B/32", device=device)
+if torch.backends.mps.is_available():
+    device = "mps"
+elif torch.cuda.is_available():
+    device = "cuda"
+else:
+    device = "cpu"
+#model, preprocess = clip.load("ViT-B/32", device=device)
+model, preprocess = clip.load("RN50", device=device)
 
 def extract_frames(video_path, out_dir, max_frames=FRAMES_PER_VIDEO):
     os.makedirs(out_dir, exist_ok=True)
